@@ -1,2 +1,2 @@
 # Annotator
-A tool for annotating images
+A tool written in C# for annotating images
