@@ -32,14 +32,14 @@
             this.txtImageFolder = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.picBox = new System.Windows.Forms.PictureBox();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.FBD = new System.Windows.Forms.FolderBrowserDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
+            this.picBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -58,14 +58,14 @@
             this.txtImageFolder.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Annotator.Properties.Settings.Default, "ImageFolder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtImageFolder.Location = new System.Drawing.Point(15, 44);
             this.txtImageFolder.Name = "txtImageFolder";
-            this.txtImageFolder.Size = new System.Drawing.Size(716, 23);
+            this.txtImageFolder.Size = new System.Drawing.Size(711, 23);
             this.txtImageFolder.TabIndex = 1;
             this.txtImageFolder.Text = global::Annotator.Properties.Settings.Default.ImageFolder;
             // 
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(737, 41);
+            this.btnBrowse.Location = new System.Drawing.Point(732, 41);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(75, 29);
             this.btnBrowse.TabIndex = 2;
@@ -76,47 +76,34 @@
             // btnOpen
             // 
             this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpen.Location = new System.Drawing.Point(818, 41);
+            this.btnOpen.Location = new System.Drawing.Point(813, 41);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(75, 29);
             this.btnOpen.TabIndex = 3;
             this.btnOpen.Text = "Open";
             this.btnOpen.UseVisualStyleBackColor = true;
             // 
-            // picBox
-            // 
-            this.picBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBox.BackColor = System.Drawing.Color.Black;
-            this.picBox.Location = new System.Drawing.Point(13, 73);
-            this.picBox.Name = "picBox";
-            this.picBox.Size = new System.Drawing.Size(718, 397);
-            this.picBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.picBox.TabIndex = 4;
-            this.picBox.TabStop = false;
-            this.picBox.Paint += new System.Windows.Forms.PaintEventHandler(this.picBox_Paint);
-            this.picBox.Resize += new System.EventHandler(this.picBox_Resize);
-            // 
             // btnNext
             // 
             this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNext.Location = new System.Drawing.Point(656, 476);
+            this.btnNext.Location = new System.Drawing.Point(651, 559);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(75, 29);
             this.btnNext.TabIndex = 5;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // btnPrevious
             // 
             this.btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPrevious.Location = new System.Drawing.Point(575, 476);
+            this.btnPrevious.Location = new System.Drawing.Point(570, 559);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(75, 29);
             this.btnPrevious.TabIndex = 6;
             this.btnPrevious.Text = "Previous";
             this.btnPrevious.UseVisualStyleBackColor = true;
+            this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
             // 
             // FBD
             // 
@@ -129,7 +116,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(905, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(900, 25);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -140,13 +127,27 @@
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(66, 21);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
+            // picBox
+            // 
+            this.picBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.picBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.picBox.Location = new System.Drawing.Point(15, 74);
+            this.picBox.Name = "picBox";
+            this.picBox.Size = new System.Drawing.Size(711, 479);
+            this.picBox.TabIndex = 8;
+            this.picBox.TabStop = false;
+            this.picBox.Paint += new System.Windows.Forms.PaintEventHandler(this.picBox_Paint);
+            this.picBox.Resize += new System.EventHandler(this.picBox_Resize);
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(905, 515);
+            this.ClientSize = new System.Drawing.Size(900, 600);
+            this.Controls.Add(this.picBox);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.picBox);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtImageFolder);
@@ -160,9 +161,9 @@
             this.Name = "MainForm";
             this.Text = "Annotator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,12 +175,12 @@
         private System.Windows.Forms.TextBox txtImageFolder;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.PictureBox picBox;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.FolderBrowserDialog FBD;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.PictureBox picBox;
     }
 }
 

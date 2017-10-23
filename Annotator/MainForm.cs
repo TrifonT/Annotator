@@ -18,17 +18,20 @@ namespace Annotator
         private List<string> _files;
         private int _currenIndex = -1;
 
+        private Image _drawnImage;
+        private Image _loadedImage;
+
         private double _xratio;
         private double _yratio;
-        private double _xoffset;
-        private double _yoffset;
+        private int _xoffset;
+        private int _yoffset;
 
         public MainForm()
         {
             _extentions = GetImageFileExtensions();
             InitializeComponent();
-            this.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::Annotator.Properties.Settings.Default, "FormSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.Size = Properties.Settings.Default.FormSize;
+            //this.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::Annotator.Properties.Settings.Default, "FormSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            //picBox.Image = new Bitmap(2000, 2000);
             LoadFileList();
         }
 
@@ -73,7 +76,8 @@ namespace Annotator
             string fullPath = System.IO.Path.Combine(ImageFolder, _files[index]);
             if (System.IO.File.Exists(fullPath))
             {
-                ShowImage(Image.FromFile(fullPath));
+                _loadedImage = Image.FromFile(fullPath);
+                ShowLoadedImage();
             }
         }
 
@@ -115,21 +119,20 @@ namespace Annotator
             return extensions;
         }
 
-        private void ShowImage(Image image)
+        private void ShowLoadedImage()
         {
             int maxWidth = picBox.Width;
             int maxHeight = picBox.Height;
-            picBox.Image = new Bitmap(maxWidth, maxHeight);
 
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
+            double ratioX = (double)maxWidth / _loadedImage.Width;
+            double ratioY = (double)maxHeight / _loadedImage.Height;
+            double ratio = Math.Min(ratioX, ratioY);
 
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
+            int newWidth = Convert.ToInt32(_loadedImage.Width * ratio);
+            int newHeight = Convert.ToInt32(_loadedImage.Height * ratio);
 
-            _xratio = (double)newWidth / image.Width;
-            _yratio = (double)newHeight / image.Height;
+            _xratio = (double)newWidth / _loadedImage.Width;
+            _yratio = (double)newHeight / _loadedImage.Height;
 
             _xoffset = (maxWidth - newWidth) / 2;
             _yoffset = (maxHeight - newHeight) / 2;
@@ -139,42 +142,52 @@ namespace Annotator
 
             Rectangle r = new Rectangle(x, y, newWidth, newHeight);
 
-            if (_drawImage != null)
-                _drawImage.Dispose();
+            if (_drawnImage != null)
+            {
+                if (_drawnImage.Width != newWidth || _drawnImage.Height != newHeight)
+                {
+                    _drawnImage.Dispose();
+                    _drawnImage = new Bitmap(newWidth, newHeight);
+                }
+            }
+            else
+            {
+                _drawnImage = new Bitmap(newWidth, newHeight);
+            }
 
-            _drawImage = new Bitmap(newWidth, newHeight);
-
-            using (var graphics = Graphics.FromImage(_drawImage))
+            using (var graphics = Graphics.FromImage(_drawnImage))
             {
                 graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.DrawImage(image, r);
+                graphics.DrawImage(_loadedImage, 0, 0, newWidth, newHeight);
             }
-
-            double fx = Convert.ToDouble(picBox.Width) / Convert.ToDouble(image.Width);
-            double fy = Convert.ToDouble(picBox.Height) / Convert.ToDouble(image.Height);
-            double f = Math.Min(fx, fy);
-
-            int nw = Convert.ToInt32(image.Width * f);
-            int nh = Convert.ToInt32(image.Height * f);
 
             picBox.Refresh();
         }
 
-        private Image _drawImage;
-
         private void picBox_Paint(object sender, PaintEventArgs e)
         {
-            if (_drawImage != null)
+            if (_drawnImage != null)
             {
-                e.Graphics.DrawImage(_drawImage, new Point(0, 0));
+                e.Graphics.DrawImage(_drawnImage, new Point(_xoffset, _yoffset));
             }
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            if (CurrenIndex < _files.Count - 1)
+                CurrenIndex++;
+        }
+
+        private void btnPrevious_Click(object sender, EventArgs e)
+        {
+            if (CurrenIndex > 0)
+                CurrenIndex--;
         }
 
         private void picBox_Resize(object sender, EventArgs e)
         {
-            if (_currenIndex >= 0)
-                LoadFile(_currenIndex);
+            ShowLoadedImage();
         }
     }
 }
