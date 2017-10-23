@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnnotationEntry.cs" />
     <Compile Include="AnnotationList.cs" />
     <Compile Include="DragRectangle.cs" />
     <Compile Include="MainForm.cs">

@@ -13,25 +13,80 @@ namespace Annotator
         private List<string> _files;
         private int _currenIndex = -1;
 
+        private AnnotationList _annList;
+        private List<RectangleF> _currentRectangles;
+
         private Image _drawnImage;
         private Image _loadedImage;
 
-        private double _xratio;
-        private double _yratio;
-        private int _xoffset;
-        private int _yoffset;
+        private float _ratio;
+        private float _xoffset;
+        private float _yoffset;
 
         public MainForm()
         {
             _extentions = GetImageFileExtensions();
             InitializeComponent();
-            //this.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::Annotator.Properties.Settings.Default, "FormSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            //picBox.Image = new Bitmap(2000, 2000);
             LoadFileList();
+            LoadAnnotations();
+        }
+
+        private void LoadFileList()
+        {
+            if (_files == null)
+                _files = new List<string>();
+
+            _files.Clear();
+
+            if (System.IO.Directory.Exists(ImageFolder))
+            {
+                string[] f = System.IO.Directory.GetFiles(ImageFolder);
+
+                foreach (string file in f)
+                {
+                    string ext = Path.GetExtension(file).ToLowerInvariant();
+
+                    if (_extentions.Contains(ext))
+                    {
+                        _files.Add(Path.GetFileName(file));
+                    }
+                }
+                _files.Sort();
+                CurrenIndex = 0;
+            }
+        }
+
+        private void LoadAnnotations()
+        {
+            if (Directory.Exists(Properties.Settings.Default.ImageFolder))
+            {
+                string annXml = Path.Combine(Properties.Settings.Default.ImageFolder, "Annotations.xml");
+                if (File.Exists(annXml))
+                {
+                    _annList = AnnotationList.FromFile(annXml);
+                }
+                else
+                {
+                    _annList = new AnnotationList();
+                }
+                foreach (string file in _files)
+                {
+                    if (!_annList.ContainsKey(file))
+                    {
+                        _annList.Add(file);
+                    }
+                }
+            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (Directory.Exists(ImageFolder))
+            {
+                if (_annList == null)
+                    _annList = new AnnotationList();
+                _annList.Save(Path.Combine(ImageFolder, "Annotations.xml"));
+            }
             Properties.Settings.Default.Save();
         }
 
@@ -53,8 +108,27 @@ namespace Annotator
                 if (value != _currenIndex)
                 {
                     _currenIndex = value;
+                    LoadRectangles(_currenIndex);
                     LoadFile(_currenIndex);
                 }
+            }
+        }
+
+        private void SaveRectangles(int index)
+        {
+            if (_files != null && index >= 0 && index < _files.Count)
+            {
+                string file = _files[index];
+                _annList.CheckInRectangles(file, _currentRectangles, _xoffset, _yoffset, _ratio);
+            }
+        }
+
+        private void LoadRectangles(int index)
+        {
+            if (_files != null && index >= 0 && index < _files.Count)
+            {
+                string file = _files[index];
+                _currentRectangles = _annList.CheckoutRectangles(file, _xoffset, _yoffset, _ratio);
             }
         }
 
@@ -76,31 +150,6 @@ namespace Annotator
             }
         }
 
-        private void LoadFileList()
-        {
-            if (_files == null)
-                _files = new List<string>();
-
-            _files.Clear();
-
-            if (System.IO.Directory.Exists(ImageFolder))
-            {
-                string[] f = System.IO.Directory.GetFiles(ImageFolder);
-
-                foreach (string file in f)
-                {
-                    string ext = Path.GetExtension(file).ToLowerInvariant();
-
-                    if (_extentions.Contains(ext))
-                    {
-                        _files.Add(file);
-                    }
-                }
-                _files.Sort();
-                CurrenIndex = 0;
-            }
-        }
-
         private static List<string> GetImageFileExtensions()
         {
             ImageCodecInfo[] encoders = ImageCodecInfo.GetImageEncoders();
@@ -119,23 +168,15 @@ namespace Annotator
             int maxWidth = picBox.Width;
             int maxHeight = picBox.Height;
 
-            double ratioX = (double)maxWidth / _loadedImage.Width;
-            double ratioY = (double)maxHeight / _loadedImage.Height;
-            double ratio = Math.Min(ratioX, ratioY);
+            float ratioX = ((float)maxWidth) / ((float)_loadedImage.Width);
+            float ratioY = ((float)maxHeight) / ((float)_loadedImage.Height);
+            _ratio = Math.Min(ratioX, ratioY);
 
-            int newWidth = Convert.ToInt32(_loadedImage.Width * ratio);
-            int newHeight = Convert.ToInt32(_loadedImage.Height * ratio);
+            int newWidth = Convert.ToInt32(_loadedImage.Width * _ratio);
+            int newHeight = Convert.ToInt32(_loadedImage.Height * _ratio);
 
-            _xratio = (double)newWidth / _loadedImage.Width;
-            _yratio = (double)newHeight / _loadedImage.Height;
-
-            _xoffset = (maxWidth - newWidth) / 2;
-            _yoffset = (maxHeight - newHeight) / 2;
-
-            int x = Convert.ToInt32(_xoffset);
-            int y = Convert.ToInt32(_yoffset);
-
-            Rectangle r = new Rectangle(x, y, newWidth, newHeight);
+            _xoffset = ((float)(maxWidth - newWidth)) / 2.0f;
+            _yoffset = ((float)(maxHeight - newHeight)) / 2.0f;
 
             if (_drawnImage != null)
             {
@@ -164,7 +205,7 @@ namespace Annotator
         {
             if (_drawnImage != null)
             {
-                e.Graphics.DrawImage(_drawnImage, new Point(_xoffset, _yoffset));
+                e.Graphics.DrawImage(_drawnImage, new PointF(_xoffset, _yoffset));
             }
         }
 
