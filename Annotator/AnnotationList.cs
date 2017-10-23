@@ -10,10 +10,15 @@ namespace Annotator
 {
     public class AnnotationList : Dictionary<string, AnnotationEntry>
     {
+        public void Add(AnnotationEntry entry)
+        {
+            Add(entry.File, entry);
+        }
+
         public void Save(TextWriter tw)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(AnnotationList));
-            xs.Serialize(tw, this);
+            XmlSerializer xs = new XmlSerializer(typeof(AnnotationEntry[]), new XmlRootAttribute() { ElementName = "Entries" });
+            xs.Serialize(tw, this.Select(i => new AnnotationEntry() { File = i.Key, Rectangles = i.Value.Rectangles }).ToArray());
         }
 
         public void Save(string fileName)
@@ -23,13 +28,21 @@ namespace Annotator
             tw.Close();
         }
 
-        public AnnotationList FromFile(string fileName)
+        public static AnnotationList FromFile(string fileName)
         {
             TextReader tr = new StreamReader(fileName);
-            XmlSerializer xs = new XmlSerializer(typeof(AnnotationList));
-            AnnotationList alst = (AnnotationList)xs.Deserialize(tr);
+            XmlSerializer xs = new XmlSerializer(typeof(AnnotationEntry[]), new XmlRootAttribute() { ElementName = "Entries" });
+
+            AnnotationEntry[] aentry = (AnnotationEntry[])xs.Deserialize(tr);
             tr.Close();
-            return alst;
+
+            AnnotationList result = new AnnotationList();
+            foreach (AnnotationEntry en in aentry)
+            {
+                result.Add(en.File, en);
+            }
+
+            return result;
         }
     }
 }
