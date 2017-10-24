@@ -515,5 +515,10 @@ namespace Annotator
         }
 
         #endregion Mouse Editing
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }
