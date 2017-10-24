@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnnotationList.cs" />
-    <Compile Include="DragRectangle.cs" />
+    <Compile Include="BRectangle.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

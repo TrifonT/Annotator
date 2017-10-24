@@ -1,35 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
-using System.Drawing;
 
 namespace Annotator
 {
     public class AnnotationEntry
     {
         public string File { get; set; }
-        public List<RectangleF> Rectangles { get; set; }
+        public List<BRectangle> Rectangles { get; set; }
     }
 
-    public class AnnotationList : Dictionary<string, List<RectangleF>>
+    public class AnnotationList : Dictionary<string, List<BRectangle>>
     {
         public void Add(string file)
         {
             if (!this.ContainsKey(file))
             {
-                this[file] = new List<RectangleF>();
+                this[file] = new List<BRectangle>();
             }
         }
 
-        public void Add(string file, Rectangle rect)
+        public void Add(string file, BRectangle rect)
         {
             if (!this.ContainsKey(file))
             {
-                this[file] = new List<RectangleF>();
+                this[file] = new List<BRectangle>();
             }
             this[file].Add(rect);
         }
@@ -64,45 +60,45 @@ namespace Annotator
             return result;
         }
 
-        public RectangleF Transform(RectangleF rect, float xOffset, float yOffset, float ratio)
+        public BRectangle Transform(BRectangle rect, float xOffset, float yOffset, float ratio)
         {
             float x = rect.X * ratio + xOffset;
             float y = rect.Y * ratio + yOffset;
             float w = rect.Width * ratio;
             float h = rect.Height * ratio;
-            return new RectangleF(x, y, w, h);
+            return new BRectangle(x, y, w, h);
         }
 
-        public RectangleF UnTransform(RectangleF rect, float xOffset, float yOffset, float ratio)
+        public BRectangle UnTransform(BRectangle rect, float xOffset, float yOffset, float ratio)
         {
             float x = (rect.X - xOffset) / ratio;
             float y = (rect.Y - yOffset) / ratio;
             float w = rect.Width / ratio;
             float h = rect.Height / ratio;
-            return new RectangleF(x, y, w, h);
+            return new BRectangle(x, y, w, h);
         }
 
-        public List<RectangleF> CheckoutRectangles(string file, float xOffset, float yOffset, float ratio)
+        public List<BRectangle> CheckoutRectangles(string file, float xOffset, float yOffset, float ratio)
         {
-            List<RectangleF> transformed = new List<RectangleF>();
+            List<BRectangle> transformed = new List<BRectangle>();
 
             if (!this.ContainsKey(file))
             {
-                this[file] = new List<RectangleF>();
+                this[file] = new List<BRectangle>();
             }
 
-            foreach (RectangleF r in this[file])
+            foreach (BRectangle r in this[file])
             {
                 transformed.Add(Transform(r, xOffset, yOffset, ratio));
             }
             return transformed;
         }
 
-        public void CheckInRectangles(string file, List<RectangleF> rectangles, float xOffset, float yOffset, float ratio)
+        public void CheckInRectangles(string file, List<BRectangle> rectangles, float xOffset, float yOffset, float ratio)
         {
-            List<RectangleF> untransformed = new List<RectangleF>();
+            List<BRectangle> untransformed = new List<BRectangle>();
 
-            foreach (RectangleF r in rectangles)
+            foreach (BRectangle r in rectangles)
             {
                 untransformed.Add(UnTransform(r, xOffset, yOffset, ratio));
             }

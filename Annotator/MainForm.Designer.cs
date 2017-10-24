@@ -38,6 +38,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picBox = new System.Windows.Forms.PictureBox();
+            this.lblMouseX = new System.Windows.Forms.Label();
+            this.lblMouseY = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.SuspendLayout();
@@ -55,12 +57,10 @@
             // 
             this.txtImageFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtImageFolder.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Annotator.Properties.Settings.Default, "ImageFolder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtImageFolder.Location = new System.Drawing.Point(15, 44);
             this.txtImageFolder.Name = "txtImageFolder";
             this.txtImageFolder.Size = new System.Drawing.Size(711, 23);
             this.txtImageFolder.TabIndex = 1;
-            this.txtImageFolder.Text = global::Annotator.Properties.Settings.Default.ImageFolder;
             // 
             // btnBrowse
             // 
@@ -139,12 +139,35 @@
             this.picBox.TabIndex = 8;
             this.picBox.TabStop = false;
             this.picBox.Paint += new System.Windows.Forms.PaintEventHandler(this.picBox_Paint);
+            this.picBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picBox_MouseDown);
+            this.picBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picBox_MouseMove);
+            this.picBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picBox_MouseUp);
             this.picBox.Resize += new System.EventHandler(this.picBox_Resize);
+            // 
+            // lblMouseX
+            // 
+            this.lblMouseX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMouseX.AutoSize = true;
+            this.lblMouseX.Location = new System.Drawing.Point(15, 559);
+            this.lblMouseX.Name = "lblMouseX";
+            this.lblMouseX.Size = new System.Drawing.Size(0, 16);
+            this.lblMouseX.TabIndex = 9;
+            // 
+            // lblMouseY
+            // 
+            this.lblMouseY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMouseY.AutoSize = true;
+            this.lblMouseY.Location = new System.Drawing.Point(78, 559);
+            this.lblMouseY.Name = "lblMouseY";
+            this.lblMouseY.Size = new System.Drawing.Size(0, 16);
+            this.lblMouseY.TabIndex = 10;
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(900, 600);
+            this.Controls.Add(this.lblMouseY);
+            this.Controls.Add(this.lblMouseX);
             this.Controls.Add(this.picBox);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.btnNext);
@@ -181,6 +204,8 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.PictureBox picBox;
+        private System.Windows.Forms.Label lblMouseX;
+        private System.Windows.Forms.Label lblMouseY;
     }
 }
 
