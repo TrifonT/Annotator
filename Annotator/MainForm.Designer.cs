@@ -39,12 +39,12 @@
             this.lblMouseY = new System.Windows.Forms.Label();
             this.SFD = new System.Windows.Forms.SaveFileDialog();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsSave = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsSaveAs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsExport = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsOptions = new System.Windows.Forms.ToolStripButton();
             this.picBox = new System.Windows.Forms.PictureBox();
             this.toolStrip1.SuspendLayout();
@@ -112,10 +112,6 @@
             this.btnPrevious.UseVisualStyleBackColor = true;
             this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
             // 
-            // FBD
-            // 
-            this.FBD.SelectedPath = global::Annotator.Properties.Settings.Default.ImageFolder;
-            // 
             // lblMouseX
             // 
             this.lblMouseX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -150,21 +146,6 @@
             this.toolStrip1.TabIndex = 11;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
             // tsSave
             // 
             this.tsSave.Image = global::Annotator.Properties.Resources.Save_16x;
@@ -173,6 +154,11 @@
             this.tsSave.Size = new System.Drawing.Size(51, 22);
             this.tsSave.Text = "&Save";
             this.tsSave.Click += new System.EventHandler(this.tsSave_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // tsSaveAs
             // 
@@ -183,6 +169,11 @@
             this.tsSaveAs.Text = "Save &As...";
             this.tsSaveAs.Click += new System.EventHandler(this.tsSaveAs_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
             // tsExport
             // 
             this.tsExport.Image = global::Annotator.Properties.Resources.Text_16x;
@@ -192,6 +183,11 @@
             this.tsExport.Text = "&Export...";
             this.tsExport.Click += new System.EventHandler(this.tsExport_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // tsOptions
             // 
             this.tsOptions.Image = global::Annotator.Properties.Resources.Settings_Inverse_16x;
@@ -199,6 +195,7 @@
             this.tsOptions.Name = "tsOptions";
             this.tsOptions.Size = new System.Drawing.Size(78, 22);
             this.tsOptions.Text = "&Options...";
+            this.tsOptions.Click += new System.EventHandler(this.tsOptions_Click);
             // 
             // picBox
             // 
@@ -233,11 +230,13 @@
             this.Controls.Add(this.label1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Annotator.Properties.Settings.Default, "FormLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.KeyPreview = true;
             this.Location = global::Annotator.Properties.Settings.Default.FormLocation;
             this.MinimumSize = new System.Drawing.Size(480, 360);
             this.Name = "MainForm";
             this.Text = "Annotator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();

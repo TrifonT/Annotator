@@ -46,17 +46,5 @@ namespace Annotator.Properties {
                 this["FormSize"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ImageFolder {
-            get {
-                return ((string)(this["ImageFolder"]));
-            }
-            set {
-                this["ImageFolder"] = value;
-            }
-        }
     }
 }

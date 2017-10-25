@@ -50,6 +50,10 @@ namespace Annotator
             {
                 ImageFolder = Properties.Settings.Default.ImageFolder;
             }
+            else
+            {
+                ImageFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            }
             CurrentAction = RectAction.NoAction;
         }
 
@@ -69,6 +73,8 @@ namespace Annotator
                     LoadAnnotations();
                     CurrenIndex = 0;
                 }
+                Properties.Settings.Default.ImageFolder = _imageFolder;
+                txtImageFolder.Text = _imageFolder;
             }
         }
 
@@ -81,7 +87,7 @@ namespace Annotator
 
             set
             {
-                if (value != _currenIndex)
+                if (value >= 0 && value != _currenIndex)
                 {
                     SaveImageRectangles(_currenIndex);
                     if (_currentRectangles != null)
@@ -89,8 +95,8 @@ namespace Annotator
                     _currenIndex = value;
                     LoadFile(_currenIndex);
                     LoadImageRectangles(_currenIndex);
-                    picBox.Refresh();
                 }
+                picBox.Refresh();
             }
         }
 
@@ -165,9 +171,9 @@ namespace Annotator
 
         private void LoadAnnotations()
         {
-            if (Directory.Exists(Properties.Settings.Default.ImageFolder))
+            if (Directory.Exists(ImageFolder))
             {
-                string annXml = Path.Combine(Properties.Settings.Default.ImageFolder, "Annotations.xml");
+                string annXml = Path.Combine(ImageFolder, "Annotations.xml");
                 if (File.Exists(annXml))
                 {
                     _annList = AnnotationList.FromFile(annXml);
@@ -222,11 +228,15 @@ namespace Annotator
 
         private void LoadFile(int index)
         {
-            string fullPath = System.IO.Path.Combine(ImageFolder, _files[index]);
-            if (System.IO.File.Exists(fullPath))
+            if (_files != null && _files.Count > 0)
             {
-                _loadedImage = Image.FromFile(fullPath);
-                ShowLoadedImage();
+                string fullPath = System.IO.Path.Combine(ImageFolder, _files[index]);
+                if (System.IO.File.Exists(fullPath))
+                {
+                    _loadedImage = Image.FromFile(fullPath);
+                    ShowLoadedImage();
+                    picBox.Refresh();
+                }
             }
         }
 
@@ -277,28 +287,31 @@ namespace Annotator
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 graphics.DrawImage(_loadedImage, 0, 0, newWidth, newHeight);
             }
-
-            picBox.Refresh();
         }
 
         private void ExportAnnotations(string fileName)
         {
             TextWriter tw = new StreamWriter(fileName);
+            string format = Properties.Settings.Default.RectangleLineFormat;
             foreach (var ann in _annList)
             {
                 tw.WriteLine(ann.Key);
                 tw.WriteLine(ann.Value.Count);
+
                 foreach (var rec in ann.Value)
-                {
-                    tw.WriteLine(string.Format("{0} {1} {2} {3}",
-                        Convert.ToInt32(rec.X),
-                        Convert.ToInt32(rec.Y),
-                        Convert.ToInt32(rec.Width),
-                        Convert.ToInt32(rec.Height)
-                        ));
-                }
+                    tw.WriteLine(string.Format(format, rec.X, rec.Y, rec.Width, rec.Height));
             }
             tw.Close();
+        }
+
+        private void DeleteActive()
+        {
+            if (_currentRectangles != null && _aRect != null)
+            {
+                _currentRectangles.Remove(_aRect);
+                SaveImageRectangles(CurrenIndex);
+            }
+            picBox.Refresh();
         }
 
         #endregion Save and Load
@@ -315,7 +328,7 @@ namespace Annotator
         {
             if (FBD.ShowDialog() == DialogResult.OK)
             {
-                txtImageFolder.Text = FBD.SelectedPath;
+                ImageFolder = FBD.SelectedPath;
             }
         }
 
@@ -339,15 +352,17 @@ namespace Annotator
             }
             if (_currentRectangles != null)
             {
+                Color drawColor = Properties.Settings.Default.RectangleColor;
+
                 foreach (BRectangle r in _currentRectangles)
                 {
                     if (r == _aRect)
                     {
-                        r.Draw(e.Graphics, Color.Yellow, true);
+                        r.Draw(e.Graphics, drawColor, true);
                     }
                     else
                     {
-                        r.Draw(e.Graphics, Color.Yellow, false);
+                        r.Draw(e.Graphics, drawColor, false);
                     }
                 }
             }
@@ -355,7 +370,46 @@ namespace Annotator
 
         private void picBox_Resize(object sender, EventArgs e)
         {
+            SaveImageRectangles(CurrenIndex);
             ShowLoadedImage();
+            LoadImageRectangles(CurrenIndex);
+            picBox.Refresh();
+        }
+
+        private void tsExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void tsSave_Click(object sender, EventArgs e)
+        {
+            SaveAnnotations(Path.Combine(ImageFolder, "Annotations.xml"));
+        }
+
+        private void tsSaveAs_Click(object sender, EventArgs e)
+        {
+            SFD.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+            SFD.FileName = Path.Combine(ImageFolder, "Annotations.xml");
+            if (SFD.ShowDialog() == DialogResult.OK)
+            {
+                SaveAnnotations(SFD.FileName);
+            }
+        }
+
+        private void tsExport_Click(object sender, EventArgs e)
+        {
+            SFD.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            SFD.InitialDirectory = ImageFolder;
+            if (SFD.ShowDialog() == DialogResult.OK)
+            {
+                ExportAnnotations(SFD.FileName);
+            }
+        }
+
+        private void tsOptions_Click(object sender, EventArgs e)
+        {
+            OptionsForm ofrm = new OptionsForm();
+            ofrm.Show(this);
         }
 
         #endregion Form Events
@@ -369,16 +423,23 @@ namespace Annotator
 
         private void GetActiveRectangle(int x, int y)
         {
-            BRectangle act = null;
-            foreach (BRectangle r in _currentRectangles)
+            if (_currentRectangles == null)
             {
-                if (r.Contains(x, y))
-                {
-                    act = r;
-                    break;
-                }
+                _aRect = null;
             }
-            _aRect = act;
+            else
+            {
+                BRectangle act = null;
+                foreach (BRectangle r in _currentRectangles)
+                {
+                    if (r.Contains(x, y))
+                    {
+                        act = r;
+                        break;
+                    }
+                }
+                _aRect = act;
+            }
         }
 
         private void ProcessEdit()
@@ -542,33 +603,12 @@ namespace Annotator
 
         #endregion Mouse Editing
 
-        private void tsExit_Click(object sender, EventArgs e)
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            this.Close();
-        }
-
-        private void tsSave_Click(object sender, EventArgs e)
-        {
-            SaveAnnotations(Path.Combine(ImageFolder, "Annotations.xml"));
-        }
-
-        private void tsSaveAs_Click(object sender, EventArgs e)
-        {
-            SFD.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-            SFD.FileName = Path.Combine(ImageFolder, "Annotations.xml");
-            if (SFD.ShowDialog() == DialogResult.OK)
+            if (_aRect != null && e.KeyCode == Keys.Delete)
             {
-                SaveAnnotations(SFD.FileName);
-            }
-        }
-
-        private void tsExport_Click(object sender, EventArgs e)
-        {
-            SFD.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            SFD.InitialDirectory = ImageFolder;
-            if (SFD.ShowDialog() == DialogResult.OK)
-            {
-                ExportAnnotations(SFD.FileName);
+                DeleteActive();
+                e.Handled = true;
             }
         }
     }

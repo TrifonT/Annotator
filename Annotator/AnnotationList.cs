@@ -96,14 +96,15 @@ namespace Annotator
 
         public void CheckInRectangles(string file, List<BRectangle> rectangles, float xOffset, float yOffset, float ratio)
         {
-            List<BRectangle> untransformed = new List<BRectangle>();
-
-            foreach (BRectangle r in rectangles)
+            if (rectangles != null)
             {
-                untransformed.Add(UnTransform(r, xOffset, yOffset, ratio));
+                List<BRectangle> untransformed = new List<BRectangle>();
+                foreach (BRectangle r in rectangles)
+                {
+                    untransformed.Add(UnTransform(r, xOffset, yOffset, ratio));
+                }
+                this[file] = untransformed;
             }
-
-            this[file] = untransformed;
         }
     }
 }

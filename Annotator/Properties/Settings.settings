@@ -8,8 +8,5 @@
     <Setting Name="FormSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">900, 600</Value>
     </Setting>
-    <Setting Name="ImageFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
   </Settings>
 </SettingsFile>
