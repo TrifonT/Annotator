@@ -35,17 +35,19 @@
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.FBD = new System.Windows.Forms.FolderBrowserDialog();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMouseX = new System.Windows.Forms.Label();
             this.lblMouseY = new System.Windows.Forms.Label();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SFD = new System.Windows.Forms.SaveFileDialog();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsSave = new System.Windows.Forms.ToolStripButton();
+            this.tsSaveAs = new System.Windows.Forms.ToolStripButton();
+            this.tsExport = new System.Windows.Forms.ToolStripButton();
+            this.tsOptions = new System.Windows.Forms.ToolStripButton();
             this.picBox = new System.Windows.Forms.PictureBox();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exportAnnotationstxtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -114,26 +116,6 @@
             // 
             this.FBD.SelectedPath = global::Annotator.Properties.Settings.Default.ImageFolder;
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem,
-            this.fileToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(900, 25);
-            this.menuStrip1.TabIndex = 7;
-            this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(66, 21);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
             // lblMouseX
             // 
             this.lblMouseX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -152,22 +134,71 @@
             this.lblMouseY.Size = new System.Drawing.Size(0, 16);
             this.lblMouseY.TabIndex = 10;
             // 
-            // fileToolStripMenuItem
+            // toolStrip1
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.exportAnnotationstxtToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
-            this.fileToolStripMenuItem.Text = "&File";
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsSave,
+            this.toolStripSeparator1,
+            this.tsSaveAs,
+            this.toolStripSeparator2,
+            this.tsExport,
+            this.toolStripSeparator3,
+            this.tsOptions});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(900, 25);
+            this.toolStrip1.TabIndex = 11;
+            this.toolStrip1.Text = "toolStrip1";
             // 
-            // saveAsToolStripMenuItem
+            // toolStripSeparator1
             // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.saveAsToolStripMenuItem.Text = "Save &As ..,";
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsSave
+            // 
+            this.tsSave.Image = global::Annotator.Properties.Resources.Save_16x;
+            this.tsSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsSave.Name = "tsSave";
+            this.tsSave.Size = new System.Drawing.Size(51, 22);
+            this.tsSave.Text = "&Save";
+            this.tsSave.Click += new System.EventHandler(this.tsSave_Click);
+            // 
+            // tsSaveAs
+            // 
+            this.tsSaveAs.Image = global::Annotator.Properties.Resources.SaveAs_16x;
+            this.tsSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsSaveAs.Name = "tsSaveAs";
+            this.tsSaveAs.Size = new System.Drawing.Size(76, 22);
+            this.tsSaveAs.Text = "Save &As...";
+            this.tsSaveAs.Click += new System.EventHandler(this.tsSaveAs_Click);
+            // 
+            // tsExport
+            // 
+            this.tsExport.Image = global::Annotator.Properties.Resources.Text_16x;
+            this.tsExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsExport.Name = "tsExport";
+            this.tsExport.Size = new System.Drawing.Size(69, 22);
+            this.tsExport.Text = "&Export...";
+            this.tsExport.Click += new System.EventHandler(this.tsExport_Click);
+            // 
+            // tsOptions
+            // 
+            this.tsOptions.Image = global::Annotator.Properties.Resources.Settings_Inverse_16x;
+            this.tsOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsOptions.Name = "tsOptions";
+            this.tsOptions.Size = new System.Drawing.Size(78, 22);
+            this.tsOptions.Text = "&Options...";
             // 
             // picBox
             // 
@@ -186,29 +217,11 @@
             this.picBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picBox_MouseUp);
             this.picBox.Resize += new System.EventHandler(this.picBox_Resize);
             // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Image = global::Annotator.Properties.Resources.Save_16x;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.saveToolStripMenuItem.Text = "&Save";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(201, 6);
-            // 
-            // exportAnnotationstxtToolStripMenuItem
-            // 
-            this.exportAnnotationstxtToolStripMenuItem.Image = global::Annotator.Properties.Resources.TextFile_12x;
-            this.exportAnnotationstxtToolStripMenuItem.Name = "exportAnnotationstxtToolStripMenuItem";
-            this.exportAnnotationstxtToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.exportAnnotationstxtToolStripMenuItem.Text = "Export Annotations.txt";
-            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(900, 600);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.lblMouseY);
             this.Controls.Add(this.lblMouseX);
             this.Controls.Add(this.picBox);
@@ -218,17 +231,15 @@
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtImageFolder);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.menuStrip1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Annotator.Properties.Settings.Default, "FormLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.Location = global::Annotator.Properties.Settings.Default.FormLocation;
-            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(480, 360);
             this.Name = "MainForm";
             this.Text = "Annotator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -244,16 +255,18 @@
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.FolderBrowserDialog FBD;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.PictureBox picBox;
         private System.Windows.Forms.Label lblMouseX;
         private System.Windows.Forms.Label lblMouseY;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem exportAnnotationstxtToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog SFD;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton tsSave;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tsSaveAs;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton tsExport;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton tsOptions;
     }
 }
 

@@ -189,6 +189,17 @@ namespace Annotator
             }
         }
 
+        private void SaveAnnotations(string fileName)
+        {
+            SaveImageRectangles(CurrenIndex);
+            if (Directory.Exists(ImageFolder))
+            {
+                if (_annList == null)
+                    _annList = new AnnotationList();
+                _annList.Save(fileName);
+            }
+        }
+
         private void SaveImageRectangles(int index)
         {
             if (_files != null && index >= 0 && index < _files.Count)
@@ -270,18 +281,33 @@ namespace Annotator
             picBox.Refresh();
         }
 
+        private void ExportAnnotations(string fileName)
+        {
+            TextWriter tw = new StreamWriter(fileName);
+            foreach (var ann in _annList)
+            {
+                tw.WriteLine(ann.Key);
+                tw.WriteLine(ann.Value.Count);
+                foreach (var rec in ann.Value)
+                {
+                    tw.WriteLine(string.Format("{0} {1} {2} {3}",
+                        Convert.ToInt32(rec.X),
+                        Convert.ToInt32(rec.Y),
+                        Convert.ToInt32(rec.Width),
+                        Convert.ToInt32(rec.Height)
+                        ));
+                }
+            }
+            tw.Close();
+        }
+
         #endregion Save and Load
 
         #region Form Events
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Directory.Exists(ImageFolder))
-            {
-                if (_annList == null)
-                    _annList = new AnnotationList();
-                _annList.Save(Path.Combine(ImageFolder, "Annotations.xml"));
-            }
+            SaveAnnotations(Path.Combine(ImageFolder, "Annotations.xml"));
             Properties.Settings.Default.Save();
         }
 
@@ -516,9 +542,34 @@ namespace Annotator
 
         #endregion Mouse Editing
 
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void tsExit_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
 
+        private void tsSave_Click(object sender, EventArgs e)
+        {
+            SaveAnnotations(Path.Combine(ImageFolder, "Annotations.xml"));
+        }
+
+        private void tsSaveAs_Click(object sender, EventArgs e)
+        {
+            SFD.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+            SFD.FileName = Path.Combine(ImageFolder, "Annotations.xml");
+            if (SFD.ShowDialog() == DialogResult.OK)
+            {
+                SaveAnnotations(SFD.FileName);
+            }
+        }
+
+        private void tsExport_Click(object sender, EventArgs e)
+        {
+            SFD.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            SFD.InitialDirectory = ImageFolder;
+            if (SFD.ShowDialog() == DialogResult.OK)
+            {
+                ExportAnnotations(SFD.FileName);
+            }
         }
     }
 }

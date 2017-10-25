@@ -91,6 +91,27 @@
   <ItemGroup>
     <None Include="Resources\TextFile_12x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SaveAs_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Close_8x_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Export_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Settings_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Settings_Inverse_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
