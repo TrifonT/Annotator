@@ -1,3 +1,4 @@
 # Annotator
-## Under construction
-A tool written in C# for annotating images
+##An image annotation tool written in C#
+
+
